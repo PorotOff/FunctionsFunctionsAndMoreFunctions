@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.Models
 {
-    internal class FunctionValuesParisModel
+    public class FunctionValuesParisModel
     {
         private Dictionary<string, (Func<double, double, double, double, double, double> Formula, AllValuesModel Values)> functionsValues =
         new Dictionary<string, (Func<double, double, double, double, double, double>, AllValuesModel)>

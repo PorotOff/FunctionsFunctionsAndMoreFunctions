@@ -1,11 +1,23 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using FunctionsFunctionsAndMoreFunctions.Resources.Scripts.Validation;
 using System;
+using System.Globalization;
 
 namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.Models
 {
-    internal class DataItemModel : ObservableObject
+    public class DataItemModel : ObservableObject
     {
         private Action<DataItemModel> recalculateCallback;
+
+        public string XRaw
+        {
+            get => x.ToString(CultureInfo.InvariantCulture);
+            set
+            {
+                X = DoubleNumericValidator.Parse(value); // присваиваем double-свойству
+                OnPropertyChanged(nameof(XRaw));
+            }
+        }
 
         private double x = 0;
         public double X
@@ -16,6 +28,17 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.Models
                 x = value;
                 recalculateCallback?.Invoke(this);
                 OnPropertyChanged(nameof(X));
+                OnPropertyChanged(nameof(XRaw));
+            }
+        }
+
+        public string YRaw
+        {
+            get => y.ToString(CultureInfo.InvariantCulture);
+            set
+            {
+                Y = DoubleNumericValidator.Parse(value); // присваиваем double-свойству
+                OnPropertyChanged(nameof(YRaw));
             }
         }
 
@@ -28,6 +51,7 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.Models
                 y = value;
                 recalculateCallback?.Invoke(this);
                 OnPropertyChanged(nameof(Y));
+                OnPropertyChanged(nameof(YRaw));
             }
         }
 

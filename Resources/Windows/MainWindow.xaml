@@ -28,18 +28,21 @@
                     HorizontalAlignment="Left">
             <StackPanel Margin="0 0 20 0">
                 <TextBlock Text="Коэффициент a" />
+                
                 <TextBox Width="100"
-                         Text="{Binding ARatio}" />
+                         Text="{Binding ARatioRaw, UpdateSourceTrigger=LostFocus}" />
             </StackPanel>
             
             <StackPanel Margin="0 0 20 0">
                 <TextBlock Text="Коэффициент b" />
+                
                 <TextBox Width="100"
-                         Text="{Binding BRatio}" />
+                         Text="{Binding BRatioRaw, UpdateSourceTrigger=LostFocus}" />
             </StackPanel>
             
             <StackPanel>
                 <TextBlock Text="Коэффициент c" />
+                
                 <ComboBox Width="100"
                           ItemsSource="{Binding AvailableCValues}"
                           SelectedItem="{Binding CRatio}"
@@ -77,11 +80,11 @@
                                     Width="*" />
                 
                 <DataGridTextColumn Header="x"
-                                    Binding="{Binding X}"
+                                    Binding="{Binding XRaw, UpdateSourceTrigger=LostFocus}"
                                     Width="*" />
-                
+
                 <DataGridTextColumn Header="y"
-                                    Binding="{Binding Y}"
+                                    Binding="{Binding YRaw, UpdateSourceTrigger=LostFocus}"
                                     Width="*" />
             </DataGrid.Columns>
         </DataGrid>

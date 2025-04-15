@@ -1,12 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using FunctionsFunctionsAndMoreFunctions.Resources.Scripts.Models;
+using FunctionsFunctionsAndMoreFunctions.Resources.Scripts.Validation;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Globalization;
 
 namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
 {
-    internal class MainWindowViewModel : ObservableObject
+    public class MainWindowViewModel : ObservableObject
     {
         private FunctionValuesParisModel functionValuesParisModel = new FunctionValuesParisModel();
 
@@ -23,6 +24,16 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
         public ObservableCollection<double> AvailableCValues { get; set; } = new ObservableCollection<double>();
 
         #region Values
+        public string ARatioRaw
+        {
+            get => aRatio.ToString(CultureInfo.InvariantCulture);
+            set
+            {
+                ARatio = DoubleNumericValidator.Parse(value);
+                OnPropertyChanged(nameof(ARatioRaw));
+            }
+        }
+
         private double aRatio;
         public double ARatio
         {
@@ -32,6 +43,17 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
                 aRatio = value;
                 if (!isOldValuesSetting) CalculateAllResults();
                 OnPropertyChanged(nameof(ARatio));
+                OnPropertyChanged(nameof(ARatioRaw));
+            }
+        }
+
+        public string BRatioRaw
+        {
+            get => bRatio.ToString(CultureInfo.InvariantCulture);
+            set
+            {
+                BRatio = DoubleNumericValidator.Parse(value);
+                OnPropertyChanged(nameof(BRatioRaw));
             }
         }
 
@@ -44,6 +66,7 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
                 bRatio = value;
                 if (!isOldValuesSetting) CalculateAllResults();
                 OnPropertyChanged(nameof(BRatio));
+                OnPropertyChanged(nameof(BRatioRaw));
             }
         }
 
@@ -172,8 +195,6 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
 
         private void CalculateAllResults()
         {
-            var formula = functionValuesParisModel.GetFormulaByFunctionName(SelectedFunction);
-
             foreach (var dataItem in DataItems)
             {
                 CalculateResult(dataItem);
