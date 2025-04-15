@@ -36,6 +36,5 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.Models
         {
             return functionsValues[functionName].Formula;
         }
-
     }
 }

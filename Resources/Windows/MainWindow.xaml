@@ -12,8 +12,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
-        <!-- Список функций -->
+        
         <ListBox x:Name="FunctionList"
                  Grid.Row="0"
                  Width="200"
@@ -22,8 +21,7 @@
                  SelectedItem="{Binding SelectedFunction}"
                  IsEnabled="True"
                  SelectionMode="Single" />
-
-        <!-- Поля для коэффициентов a и b + выпадающий список c -->
+        
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal"
                     Margin="0 0 0 10"
@@ -49,8 +47,7 @@
                           IsEditable="False" />
             </StackPanel>
         </StackPanel>
-
-        <!-- Таблица с f(x, y), x, y -->
+        
         <DataGrid Grid.Row="2"
                   ItemsSource="{Binding DataItems}"
                   AutoGenerateColumns="False"
@@ -64,10 +61,9 @@
             <DataGrid.Resources>
                 <Style TargetType="{x:Type DataGridRow}">
                     <Style.Resources>
-                        <!-- Убираем синий фон при выделении -->
                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
                                          Color="Transparent" />
-                        <!-- Убираем синий текст при выделении -->
+                        
                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
                                          Color="Black" />
                     </Style.Resources>
@@ -79,9 +75,11 @@
                                     Binding="{Binding Result}"
                                     IsReadOnly="True"
                                     Width="*" />
+                
                 <DataGridTextColumn Header="x"
                                     Binding="{Binding X}"
                                     Width="*" />
+                
                 <DataGridTextColumn Header="y"
                                     Binding="{Binding Y}"
                                     Width="*" />

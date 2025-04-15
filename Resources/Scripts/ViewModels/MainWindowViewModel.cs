@@ -6,10 +6,8 @@ using System.ComponentModel;
 
 namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
 {
-    internal class MainWindowViewModel : ObservableObject, INotifyPropertyChanged
+    internal class MainWindowViewModel : ObservableObject
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private FunctionValuesParisModel functionValuesParisModel = new FunctionValuesParisModel();
 
         private ObservableCollection<string> functionNames = new ObservableCollection<string>();
@@ -18,9 +16,10 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
             get { return functionNames; }
             set
             {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FunctionNames)));
+                OnPropertyChanged(nameof(FunctionNames));
             }
         }
+
         public ObservableCollection<double> AvailableCValues { get; set; } = new ObservableCollection<double>();
 
         #region Values
@@ -31,8 +30,8 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
             set
             {
                 aRatio = value;
-                SaveValues();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ARatio)));
+                if (!isOldValuesSetting) CalculateAllResults();
+                OnPropertyChanged(nameof(ARatio));
             }
         }
 
@@ -43,8 +42,8 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
             set
             {
                 bRatio = value;
-                SaveValues();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BRatio)));
+                if (!isOldValuesSetting) CalculateAllResults();
+                OnPropertyChanged(nameof(BRatio));
             }
         }
 
@@ -55,48 +54,22 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
             set
             {
                 cRatio = value;
-                SaveValues();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CRatio)));
+                if (!isOldValuesSetting) CalculateAllResults();
+                OnPropertyChanged(nameof(CRatio));
             }
         }
 
-        private double x;
-        public double X
+        public ObservableCollection<DataItemModel> dataItems = new ObservableCollection<DataItemModel>();
+        public ObservableCollection<DataItemModel> DataItems
         {
-            get { return x; }
+            get { return dataItems; }
             set
             {
-                x = value;
-                SaveValues();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(X)));
+                dataItems = value;
+                if (!isOldValuesSetting) CalculateAllResults();
+                OnPropertyChanged(nameof(DataItems));
             }
         }
-
-        private double y;
-        public double Y
-        {
-            get { return y; }
-            set
-            {
-                y = value;
-                SaveValues();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Y)));
-            }
-        }
-
-        private double result;
-        public double Result
-        {
-            get { return result; }
-            set
-            {
-                result = value;
-                SaveValues();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Result)));
-            }
-        }
-
-        public ObservableCollection<DataItemModel> DataItems { get; private set; } = new ObservableCollection<DataItemModel>();
         #endregion
 
         private string selectedFunction;
@@ -105,15 +78,25 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
             get { return selectedFunction; }
             set
             {
+                isOldValuesSetting = true;
+
+                if (selectedFunction != null) SaveValues();
+
                 selectedFunction = value;
 
-                RecalculateCValues();
+                CalculateCValues();
 
                 LoadValues();
 
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedFunction)));
+                CalculateAllResults();
+
+                isOldValuesSetting = false;
+
+                OnPropertyChanged(nameof(SelectedFunction));
             }
         }
+
+        private bool isOldValuesSetting = false;
 
         public MainWindowViewModel()
         {
@@ -132,40 +115,42 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
 
         private void LoadValues()
         {
-            AllValuesModel allValuesModel = functionValuesParisModel.GetAllValuesByFunctionName(SelectedFunction);
+            var allValuesModel = functionValuesParisModel.GetAllValuesByFunctionName(SelectedFunction);
             int selectedFunctionIndex = FunctionNames.IndexOf(SelectedFunction);
 
             ARatio = allValuesModel.ARatio;
             BRatio = allValuesModel.BRatio;
-            CRatio = AvailableCValues[allValuesModel.CRatioIndex];
+            CRatio = allValuesModel.CRatio == 0 ? AvailableCValues[0] : allValuesModel.CRatio;
 
-            foreach (var dataItem in DataItems)
+            DataItems.Clear();
+            foreach (var dataItem in allValuesModel.DataItems)
             {
-                DataItems.Add(new DataItemModel
+                var newDataItem = new DataItemModel
                 {
                     X = dataItem.X,
                     Y = dataItem.Y,
                     Result = dataItem.Result
-                });
-            }
+                };
+                newDataItem.SetRecalculationHandler(CalculateResult);
 
-            SetCalculationHandlers();
+                DataItems.Add(newDataItem);
+            }
         }
 
         private void SaveValues()
         {
-            AllValuesModel allValuesModel = new AllValuesModel
+            var allValuesModel = new AllValuesModel
             {
                 ARatio = ARatio,
                 BRatio = BRatio,
-                CRatioIndex = AvailableCValues.IndexOf(CRatio),
+                CRatio = CRatio,
                 DataItems = new ObservableCollection<DataItemModel>(DataItems)
             };
 
             functionValuesParisModel.SetValuesByFunctionName(SelectedFunction, allValuesModel);
         }
 
-        private void RecalculateCValues()
+        private void CalculateCValues()
         {
             AvailableCValues.Clear();
 
@@ -178,30 +163,21 @@ namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.ViewModels
             }
         }
 
-        private void SetCalculationHandlers()
-        {
-            foreach (var item in DataItems)
-            {
-                item.SetRecalculationHandler(CalculateItemResult);
-            }
-
-            DataItems.CollectionChanged += (s, e) =>
-            {
-                if (e.NewItems != null)
-                {
-                    foreach (DataItemModel newItem in e.NewItems)
-                    {
-                        newItem.SetRecalculationHandler(CalculateItemResult);
-                    }
-                }
-            };
-        }
-
-        private void CalculateItemResult(DataItemModel item)
+        private void CalculateResult(DataItemModel dataItem)
         {
             var formula = functionValuesParisModel.GetFormulaByFunctionName(SelectedFunction);
-            item.Result = formula(ARatio, BRatio, CRatio, item.X, item.Y);
+
+            dataItem.Result = formula(ARatio, BRatio, CRatio, dataItem.X, dataItem.Y);
         }
 
+        private void CalculateAllResults()
+        {
+            var formula = functionValuesParisModel.GetFormulaByFunctionName(SelectedFunction);
+
+            foreach (var dataItem in DataItems)
+            {
+                CalculateResult(dataItem);
+            }
+        }
     }
 }
