@@ -5,88 +5,95 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FunctionsFunctionsAndMoreFunctions"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        
-        <ListBox x:Name="FunctionList"
-                 Grid.Row="0"
-                 Width="200"
-                 Margin="0 0 0 10"
-                 ItemsSource="{Binding FunctionNames}"
-                 SelectedItem="{Binding SelectedFunction}"
-                 IsEnabled="True"
-                 SelectionMode="Single" />
-        
-        <StackPanel Grid.Row="1"
-                    Orientation="Horizontal"
-                    Margin="0 0 0 10"
-                    HorizontalAlignment="Left">
-            <StackPanel Margin="0 0 20 0">
-                <TextBlock Text="Коэффициент a" />
-                
-                <TextBox Width="100"
-                         Text="{Binding ARatioRaw, UpdateSourceTrigger=LostFocus}" />
-            </StackPanel>
-            
-            <StackPanel Margin="0 0 20 0">
-                <TextBlock Text="Коэффициент b" />
-                
-                <TextBox Width="100"
-                         Text="{Binding BRatioRaw, UpdateSourceTrigger=LostFocus}" />
-            </StackPanel>
-            
-            <StackPanel>
-                <TextBlock Text="Коэффициент c" />
-                
-                <ComboBox Width="100"
-                          ItemsSource="{Binding AvailableCValues}"
-                          SelectedItem="{Binding CRatio}"
-                          IsReadOnly="True"
-                          IsEditable="False" />
-            </StackPanel>
-        </StackPanel>
-        
-        <DataGrid Grid.Row="2"
-                  ItemsSource="{Binding DataItems}"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="True"
-                  CanUserDeleteRows="True"
-                  CanUserResizeRows="True"
-                  Margin="0"
-                  HeadersVisibility="Column"
-                  IsReadOnly="False"
-                  EnableRowVirtualization="False">
-            <DataGrid.Resources>
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Style.Resources>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
-                                         Color="Transparent" />
-                        
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
-                                         Color="Black" />
-                    </Style.Resources>
-                </Style>
-            </DataGrid.Resources>
+        Title="MainWindow"
+        Height="450"
+        Width="800">
+    <Viewbox>
+        <Grid Margin="50">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="f(x, y)"
-                                    Binding="{Binding Result}"
-                                    IsReadOnly="True"
-                                    Width="*" />
-                
-                <DataGridTextColumn Header="x"
-                                    Binding="{Binding XRaw, UpdateSourceTrigger=LostFocus}"
-                                    Width="*" />
+            <ListBox x:Name="FunctionList"
+                     Grid.Row="0"
+                     Margin="0 0 0 10"
+                     ItemsSource="{Binding FunctionNames}"
+                     SelectedItem="{Binding SelectedFunction}"
+                     HorizontalAlignment="Stretch" />
 
-                <DataGridTextColumn Header="y"
-                                    Binding="{Binding YRaw, UpdateSourceTrigger=LostFocus}"
-                                    Width="*" />
-            </DataGrid.Columns>
-        </DataGrid>
-    </Grid>
+            <Grid Grid.Row="1"
+                  Margin="0 0 0 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0"
+                            Margin="0 0 20 0">
+                    <TextBlock Text="Коэффициент a" />
+                    <TextBox Text="{Binding ARatioRaw, UpdateSourceTrigger=LostFocus}"
+                             HorizontalAlignment="Stretch" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1"
+                            Margin="0 0 20 0">
+                    <TextBlock Text="Коэффициент b" />
+                    <TextBox Text="{Binding BRatioRaw, UpdateSourceTrigger=LostFocus}"
+                             HorizontalAlignment="Stretch" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Коэффициент c" />
+                    <ComboBox ItemsSource="{Binding AvailableCValues}"
+                              SelectedItem="{Binding CRatio}"
+                              IsReadOnly="True"
+                              IsEditable="False"
+                              HorizontalAlignment="Stretch" />
+                </StackPanel>
+            </Grid>
+
+            <DataGrid Grid.Row="2"
+                      ItemsSource="{Binding DataItems}"
+                      MinColumnWidth="100"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="True"
+                      CanUserDeleteRows="True"
+                      CanUserResizeRows="True"
+                      HeadersVisibility="Column"
+                      IsReadOnly="False"
+                      EnableRowVirtualization="False"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+                <DataGrid.Resources>
+                    <Style TargetType="{x:Type DataGridRow}">
+                        <Style.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                                             Color="Transparent" />
+
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
+                                             Color="Black" />
+                        </Style.Resources>
+                    </Style>
+                </DataGrid.Resources>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="f(x, y)"
+                                        Binding="{Binding Result}"
+                                        IsReadOnly="True"
+                                        Width="Auto" />
+
+                    <DataGridTextColumn Header="x"
+                                        Binding="{Binding XRaw, UpdateSourceTrigger=LostFocus}"
+                                        Width="Auto" />
+
+                    <DataGridTextColumn Header="y"
+                                        Binding="{Binding YRaw, UpdateSourceTrigger=LostFocus}"
+                                        Width="Auto" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Viewbox>
 </Window>
