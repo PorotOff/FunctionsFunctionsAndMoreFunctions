@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using FunctionsFunctionsAndMoreFunctions.Resources.Scripts.Validation;
-using System;
 using System.Globalization;
 
 namespace FunctionsFunctionsAndMoreFunctions.Resources.Scripts.Models
