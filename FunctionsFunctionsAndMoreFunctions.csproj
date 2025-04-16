@@ -97,8 +97,7 @@
     <Compile Include="Resources\Scripts\Models\AllValuesModel.cs" />
     <Compile Include="Resources\Scripts\Models\DataItemModel.cs" />
     <Compile Include="Resources\Scripts\Models\FunctionValuesParisModel.cs" />
-    <Compile Include="Resources\Scripts\Validation\DoubleNumericValidation.cs" />
-    <Compile Include="Resources\Scripts\Validation\NumericValidationRule.cs" />
+    <Compile Include="Resources\Scripts\Validation\DoubleNumbersValidation.cs" />
     <Compile Include="Resources\Scripts\ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Resources\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
