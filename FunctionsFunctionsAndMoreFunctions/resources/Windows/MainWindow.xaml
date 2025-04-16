@@ -34,6 +34,7 @@
                 <StackPanel Grid.Column="0"
                             Margin="0 0 20 0">
                     <TextBlock Text="Коэффициент a" />
+                    
                     <TextBox Text="{Binding ARatioRaw, UpdateSourceTrigger=LostFocus}"
                              HorizontalAlignment="Stretch" />
                 </StackPanel>
@@ -41,12 +42,14 @@
                 <StackPanel Grid.Column="1"
                             Margin="0 0 20 0">
                     <TextBlock Text="Коэффициент b" />
+                    
                     <TextBox Text="{Binding BRatioRaw, UpdateSourceTrigger=LostFocus}"
                              HorizontalAlignment="Stretch" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="2">
                     <TextBlock Text="Коэффициент c" />
+                    
                     <ComboBox ItemsSource="{Binding AvailableCValues}"
                               SelectedItem="{Binding CRatio}"
                               IsReadOnly="True"
